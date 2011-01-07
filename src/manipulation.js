@@ -320,6 +320,25 @@ jQuery.fn.extend({
 		}
 
 		if ( this[0] ) {
+			
+			//remember the checked state///
+			var atLeastOneChecked = false;
+			var argElems = args[0];
+			var argLen = args[0].length;
+			var jqueryCheckWorkaroundArray =new Array();
+			for ( var i = 0; i < argLen; i++ ) 
+			{
+				var thisArg = argElems[i];
+				if(thisArg && thisArg.checked)
+				{
+						//thisArg.setAttribute('_jqueryCheckWorkaround', thisArg.checked);
+						jqueryCheckWorkaroundArray[i] = thisArg.checked;
+						atLeastOneChecked = true;
+				}
+			}
+			////////////////////////////////
+			
+			
 			parent = value && value.parentNode;
 
 			// If we're in a fragment, just use that instead of building a new one
@@ -352,7 +371,19 @@ jQuery.fn.extend({
 					);
 				}
 			}
-
+			
+			//restore the checked state if applicable//
+			if(atLeastOneChecked)
+			{
+				for ( var i = 0; i < argLen; i++ ) 
+				{
+					var thisArg = argElems[i];
+					if(thisArg && jqueryCheckWorkaroundArray[i])
+						thisArg.checked = jqueryCheckWorkaroundArray[i];	
+				}
+			}
+			///////////////////////////////////////////
+			
 			if ( scripts.length ) {
 				jQuery.each( scripts, evalScript );
 			}
