@@ -169,6 +169,16 @@
 
 		document.body.removeChild( div ).style.display = "none";
 		div = tds = null;
+		
+		//check if a checked checkbox will remain checked if appended
+		//fails in IE6/7
+		var checkboxCheck = document.createElement("input");
+		checkboxCheck.setAttribute("type","checkbox");
+		checkboxCheck.setAttribute("checked","checked");
+		document.body.appendChild(checkboxCheck);
+		jQuery.support.checkboxAppendPermanence = checkboxCheck.checked;
+		document.body.removeChild(checkboxCheck);
+		checkboxCheck = null;
 	});
 
 	// Technique from Juriy Zaytsev
