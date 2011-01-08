@@ -321,23 +321,23 @@ jQuery.fn.extend({
 
 		if ( this[0] ) {
 			
-			//remember the checked state///
-			var atLeastOneChecked = false;
-			var argElems = args[0];
-			var argLen = args[0].length;
-			var jqueryCheckWorkaroundArray =new Array();
-			for ( var i = 0; i < argLen; i++ ) 
+			if(!jQuery.support.checkboxAppendPermanence)
 			{
-				var thisArg = argElems[i];
-				if(thisArg && thisArg.checked)
+				//remember the checked state///
+				var atLeastOneChecked = false;
+				var argElems = args[0];
+				var argLen = args[0].length;
+				var jqueryCheckWorkaroundArray =new Array();
+				for ( var i = 0; i < argLen; i++ ) 
 				{
-						//thisArg.setAttribute('_jqueryCheckWorkaround', thisArg.checked);
-						jqueryCheckWorkaroundArray[i] = thisArg.checked;
-						atLeastOneChecked = true;
+					var thisArg = argElems[i];
+					if(thisArg && thisArg.checked)
+					{
+							jqueryCheckWorkaroundArray[i] = thisArg.checked;
+							atLeastOneChecked = true;
+					}
 				}
 			}
-			////////////////////////////////
-			
 			
 			parent = value && value.parentNode;
 
@@ -348,9 +348,9 @@ jQuery.fn.extend({
 			} else {
 				results = jQuery.buildFragment( args, this, scripts );
 			}
-
+			
 			fragment = results.fragment;
-
+			
 			if ( fragment.childNodes.length === 1 ) {
 				first = fragment = fragment.firstChild;
 			} else {
@@ -372,17 +372,19 @@ jQuery.fn.extend({
 				}
 			}
 			
-			//restore the checked state if applicable//
-			if(atLeastOneChecked)
+			if(!jQuery.support.checkboxAppendPermanence)
 			{
-				for ( var i = 0; i < argLen; i++ ) 
+				//restore the checked state if applicable//
+				if(atLeastOneChecked)
 				{
-					var thisArg = argElems[i];
-					if(thisArg && jqueryCheckWorkaroundArray[i])
-						thisArg.checked = jqueryCheckWorkaroundArray[i];	
+					for ( var i = 0; i < argLen; i++ ) 
+					{
+						var thisArg = argElems[i];
+						if(thisArg && jqueryCheckWorkaroundArray[i])
+							thisArg.checked = jqueryCheckWorkaroundArray[i];	
+					}
 				}
 			}
-			///////////////////////////////////////////
 			
 			if ( scripts.length ) {
 				jQuery.each( scripts, evalScript );
